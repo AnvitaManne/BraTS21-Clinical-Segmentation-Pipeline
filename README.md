@@ -92,14 +92,39 @@ For step-wise validation, run individual scripts inside `development_steps/`. Ea
 
 ---
 
-## Technical Notes: Coordinate Accuracy
-
-A common issue in medical AI deployment is spatial misalignment between model predictions and original scans. This pipeline resolves that by extracting the affine matrix and header metadata from the source FLAIR DICOM series and applying it directly to the exported NIfTI segmentation mask.
-
-This preserves anatomical consistency in 3D space and ensures that tumor boundaries align precisely with the original imaging volume, which is critical for clinical reliability.
-
----
-
 ## Author
 
 Anvita Manne
+
+Perfect. I’ll keep your README exactly as it is and only add the necessary acknowledgement section — nothing extra, no disclaimers, no expansion.
+
+You can append this at the end of your existing README:
+
+---
+
+## Acknowledgement
+
+Data used in this project were obtained as part of the RSNA-ASNR-MICCAI Brain Tumor Segmentation (BraTS) Challenge project through Synapse ID (syn25829067).
+
+If this work is used in academic research, please cite the following publications:
+
+[1] U. Baid et al.,
+The RSNA-ASNR-MICCAI BraTS 2021 Benchmark on Brain Tumor Segmentation and Radiogenomic Classification, arXiv:2107.02314, 2021.
+
+[2] B. H. Menze et al.,
+The Multimodal Brain Tumor Image Segmentation Benchmark (BRATS), IEEE Transactions on Medical Imaging, 34(10), 1993–2024 (2015).
+DOI: 10.1109/TMI.2014.2377694
+
+[3] S. Bakas et al.,
+Advancing The Cancer Genome Atlas glioma MRI collections with expert segmentation labels and radiomic features, Nature Scientific Data, 4:170117 (2017).
+DOI: 10.1038/sdata.2017.117
+
+If permitted by the publishing venue, please also cite:
+
+[4] S. Bakas et al.,
+Segmentation Labels and Radiomic Features for the Pre-operative Scans of the TCGA-GBM collection, The Cancer Imaging Archive, 2017.
+DOI: 10.7937/K9/TCIA.2017.KLXWJJ1Q
+
+[5] S. Bakas et al.,
+Segmentation Labels and Radiomic Features for the Pre-operative Scans of the TCGA-LGG collection, The Cancer Imaging Archive, 2017.
+DOI: 10.7937/K9/TCIA.2017.GJQ7R0EF

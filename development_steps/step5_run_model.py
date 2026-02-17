@@ -5,25 +5,25 @@ import shutil
 import torch
 import nibabel as nib
 import numpy as np
+from scipy.ndimage import zoom 
 from monai.networks.nets import UNet
 from monai.transforms import Compose, EnsureChannelFirst, ScaleIntensity, Resize, ToTensor
 
 # CONFIG
 ORTHANC = "http://localhost:8042"
 
-# You would paste the result from Step 4 here
 SERIES = {
     "flair": "42311af6-0627e495-7aae6f38-817661bb-2d4f9871",
     "t1": "39101ca2-9f3a69d9-e5182dc5-5648f5cb-45d07f3a",
     "t2": "f6fc1a44-541c3d2b-1db48635-c5eec6f2-eba3d4b5"
 }
 
-MODEL_PATH = "model/unet_brats_multimodal_epoch_50.pth"
+MODEL_PATH = r"C:\Users\anvit\Downloads\Suvarna_Model_Run\unet_brats_multimodal_epoch_50.pth"
 
 os.makedirs("dicom_temp", exist_ok=True)
 os.makedirs("nifti_temp", exist_ok=True)
 
-# DOWNLOAD & EXTRACT SERIES
+# DOWNLOAD & EXTRACT SERIES 
 def download_series(series_id, name):
     print(f"⬇ Downloading {name}...")
     r = requests.get(f"{ORTHANC}/series/{series_id}/archive")
@@ -37,7 +37,7 @@ flair_path = download_series(SERIES["flair"], "flair")
 t1_path = download_series(SERIES["t1"], "t1")
 t2_path = download_series(SERIES["t2"], "t2")
 
-# CONVERT TO NIFTI
+# CONVERT TO NIFTI 
 def dicom_to_nifti(dicom_root_folder, output_name):
     import SimpleITK as sitk
     dicom_folder = None
@@ -66,7 +66,7 @@ print(" Model loaded")
 
 # LOAD NIFTI + STACK
 flair_obj = nib.load(flair_nii) 
-flair_data = flair_obj.get_fdata()
+flair_data = flair_obj.get_fdata() # original dimensions
 t1_data = nib.load(t1_nii).get_fdata()
 t2_data = nib.load(t2_nii).get_fdata()
 
@@ -78,14 +78,25 @@ input_tensor = transforms(image).unsqueeze(0).to(device)
 # RUN INFERENCE
 with torch.no_grad():
     output = model(input_tensor)
-    prediction = torch.argmax(output, dim=1).cpu().numpy()[0]
+    prediction = torch.argmax(output, dim=1).cpu().numpy()[0] # model resolution (128x128x64)
 
-print(" Prediction shape:", prediction.shape)
+# UPSCALING 
+print(f"Resizing mask from {prediction.shape} back to clinical {flair_data.shape}...")
 
-# SAVE PREDICTION
-prediction_nii = nib.Nifti1Image(prediction.astype(np.uint8), flair_obj.affine, flair_obj.header)
+zoom_factors = (
+    flair_data.shape[0] / prediction.shape[0],
+    flair_data.shape[1] / prediction.shape[1],
+    flair_data.shape[2] / prediction.shape[2]
+)
+
+prediction_upscaled = zoom(prediction, zoom_factors, order=0)
+
+# SAVE PREDICITON
+prediction_nii = nib.Nifti1Image(
+    prediction_upscaled.astype(np.uint8), 
+    flair_obj.affine, 
+    flair_obj.header
+)
 nib.save(prediction_nii, "prediction_mask.nii.gz")
 
-
-print(" Full pipeline complete.\nSaved: prediction_mask.nii.gz")
-
+print(f" Full pipeline complete.\nSaved: prediction_mask.nii.gz")

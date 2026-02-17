@@ -2,11 +2,9 @@
 __pycache__/
 *.py[cod]
 
-# Virtual Environments
+# Virtual Environments & IDE
 venv/
 .env
-
-# IDE settings
 .vscode/
 .idea/
 

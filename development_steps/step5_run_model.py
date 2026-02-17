@@ -18,7 +18,7 @@ SERIES = {
     "t2": "f6fc1a44-541c3d2b-1db48635-c5eec6f2-eba3d4b5"
 }
 
-MODEL_PATH = r"C:\Users\anvit\Downloads\Suvarna_Model_Run\unet_brats_multimodal_epoch_50.pth"
+MODEL_PATH = "model/unet_brats_multimodal_epoch_50.pth"
 
 os.makedirs("dicom_temp", exist_ok=True)
 os.makedirs("nifti_temp", exist_ok=True)
@@ -83,8 +83,9 @@ with torch.no_grad():
 
 print(" Prediction shape:", prediction.shape)
 
-# SAVE RESULT (FIXED: Copying affine and header from FLAIR)
+# SAVE PREDICTION
 prediction_nii = nib.Nifti1Image(prediction.astype(np.uint8), flair_obj.affine, flair_obj.header)
-nib.save(prediction_nii, "correct_prediction_mask.nii.gz")
+nib.save(prediction_nii, "prediction_mask.nii.gz")
 
-print(" Full pipeline complete.\nSaved: correct_prediction_mask.nii.gz")
+
+print(" Full pipeline complete.\nSaved: prediction_mask.nii.gz")

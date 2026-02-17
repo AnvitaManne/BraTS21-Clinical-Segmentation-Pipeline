@@ -1,12 +1,25 @@
-# Ignore the actual data files inside these folders
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Virtual Environments
+venv/
+.env
+
+# IDE settings
+.vscode/
+.idea/
+
+# DATA STAGING
 data/dicom_temp/*
 data/nifti_temp/*
-
-# But don't ignore the .gitkeep file 
 !data/dicom_temp/.gitkeep
 !data/nifti_temp/.gitkeep
 
-# Ignore large model weights and python cache
-*.pth
-__pycache__/
-.venv/
+# MODELS & WEIGHTS
+models/*.pth
+!models/.gitkeep
+
+# PIPELINE OUTPUTS
+prediction_mask.nii.gz
+*.zip

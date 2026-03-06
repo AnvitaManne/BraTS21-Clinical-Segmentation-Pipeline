@@ -17,9 +17,14 @@ F - predicted tumor with 50% opactiy
 B - flair 
 ![Predicted Tumor Segmentation (3D Slicer Overlay)](images/slicer_prediction.png)
 
-<p align="center">
-  <video src="https://github.com/user-attachments/assets/81209761-dded-4254-bc63-41ea6328a89f" width="100%" autoplay loop muted playsinline></video>
-</p>
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/81209761-dded-4254-bc63-41ea6328a89f" 
+   controls="controls" 
+   muted="muted" 
+   class="d-block rounded-bottom-2 width-fit" 
+   style="max-height:640px; min-height: 200px">
+  </video>
+</div>
 
 
 ---
